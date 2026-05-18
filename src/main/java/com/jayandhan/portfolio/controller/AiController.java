@@ -64,6 +64,10 @@ public class AiController {
             default        -> "Give me a random interesting fact about animals, food, health, science, or history.";
         };
 
+        // Inject true randomness from Java so the AI gets a unique prompt every time
+        String randomSeed = java.util.UUID.randomUUID().toString();
+        userPrompt += "\n(Randomization seed: " + randomSeed + " - ensure you provide a completely unique fact different from previous ones).";
+
         long start = System.currentTimeMillis();
         String fact = chatClient.prompt()
             .system(systemPrompt)
