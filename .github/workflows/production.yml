@@ -1,0 +1,42 @@
+name: Production CI/CD
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Run tests
+        run: ./mvnw test --no-transfer-progress
+
+  deploy:
+    name: Deploy to Production
+    needs: test
+    runs-on: ubuntu-latest
+    environment: production      # pauses here — waits for your approval in GitHub UI
+
+    steps:
+      - name: Trigger Render Production Deploy
+        run: |
+          curl -s -o /dev/null -w "HTTP Status: %{http_code}\n" \
+            -X POST "${{ secrets.RENDER_PROD_DEPLOY_HOOK }}"
