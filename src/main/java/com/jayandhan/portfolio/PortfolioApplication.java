@@ -2,10 +2,12 @@ package com.jayandhan.portfolio;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
+@EnableScheduling
 @RestController
 public class PortfolioApplication {
 
@@ -14,7 +16,7 @@ public class PortfolioApplication {
 	}
 
 	@GetMapping("/")
-    public String hello() {
-      return String.format("Hello world from Java Spring Boot!");
-    }
+	public String hello() {
+		return String.format("Hello world from Java Spring Boot!");
+	}
 }
